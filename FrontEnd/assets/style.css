@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -58,6 +59,7 @@ header {
 	justify-content: space-between;
 	margin: 50px 0
 }
+
 section {
 	margin: 50px 0
 }
@@ -84,6 +86,13 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
+header a,
+nav a {
+	text-decoration: none;
+	color: inherit;
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -125,6 +134,28 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+.filtres-wrapper {
+	display: flex;
+	gap: 10px;
+	margin: 45px;
+	justify-content: center;
+}
+
+.filtres-card {
+	border-radius: 60px;
+	border: 1px solid #1D6154;
+	padding: 7px;
+	min-width: 60px;
+	text-align: center;
+}
+
+.filtres-card.selected {
+    background-color: #1D6154;
+    color: white;
+}
+
+
 .gallery {
 	width: 100%;
 	display: grid;
