@@ -30,7 +30,6 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -48,12 +47,20 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
+html {
+	height: 100%;
+}
+
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
 	max-width: 1140px;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -77,8 +84,9 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
+
+
 
 h2{
 	font-family: 'Syne';
@@ -107,6 +115,11 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+main {
+	flex: 1 0 auto;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -211,9 +224,63 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+footer {
+	flex-shrink: 0;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
 }
 
+/** Page LogIn **/
+
+nav .selected {
+	font-weight: bold;
+}
+
+.container-login {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.container-login form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+}
+
+.input-group input {
+	height: 50px;
+	width: 380px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin: 10px 0px;
+}
+
+.container-login form button {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	padding: 10px 40px;
+	border-radius: 60px ;
+	border: none;
+}
+
+.container-login form a {
+	color:inherit;
+	text-underline-offset: 3px;
+}
+
+.margin-top {
+	margin-top: 25px;
+}
