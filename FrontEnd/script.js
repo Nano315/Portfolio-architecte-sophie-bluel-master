@@ -3,9 +3,21 @@ const API_URL = "http://localhost:5678/api/works";
 
 let travaux = [];  // Déclaration globale
 
-const filtres = document.querySelectorAll('.filtres-card'); // 
+const filtres = document.querySelectorAll('.filtres-card');
+
+const body = document.getElementsByTagName('body')[0];
+const modeEditionBar = document.querySelector('.mode-edition-bar');
+const token = localStorage.getItem('token');
 
 
+// Afficher la barre noire si l'utilisateur est connecté
+if (token) {
+    modeEditionBar.style.display = 'flex';
+    body.style.marginTop = '43px';
+} else {
+    modeEditionBar.style.display = 'none';
+    body.style.marginTop = '0px';
+}
 
 // Récupération des travaux depuis le back-end
 fetch(API_URL)
@@ -63,8 +75,13 @@ filtres.forEach(filtre => {
 
         // Suppression de tous les éléments précédents de la galerie
         document.querySelector('.gallery').innerHTML = "";
-        
+
         // Filtrage des travaux selon l'ID de la catégorie
         filtrerTravaux(categoryId);
+
+        // À la déconnexion de l'utilisateur
+localStorage.removeItem('token');
     });
 });
+
+

@@ -8,6 +8,12 @@ document.querySelector(".container-login form").addEventListener("submit", funct
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
 
+    // Validation de l'email
+    const emailRegex = /[a-z0-9._-]+@[a-z0-9._-]+.[a-z0-9._-]+/;
+    if (!emailRegex.test(email)) {
+        alert("Veuillez entrer une adresse e-mail valide.");
+        return;
+    }
 
     // Envoyer une requête POST avec les données de l'utilisateur
     fetch(LOGIN_API_URL, {
