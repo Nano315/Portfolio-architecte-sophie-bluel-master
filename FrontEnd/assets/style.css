@@ -158,8 +158,6 @@ body {
   gap: 11px;
 }
 
-
-
 header {
   display: flex;
   justify-content: space-between;
@@ -225,6 +223,7 @@ html {
 #introduction {
   display: flex;
   align-items: center;
+  margin-bottom: 10em;
 }
 #introduction figure {
   flex: 1;
@@ -245,9 +244,93 @@ html {
 #introduction p {
   margin-bottom: 0.5em;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-wrapper {
+  background-color: #fffef8;
+  border-radius: 10px;
+  width: 630px;
+
+  padding: 2em;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  float: right;
+}
+
+.main-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-modal h2 {
+  color: #000;
+  text-align: center;
+  font-family: Work Sans;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+#barre-separatrice {
+  width: 420px;
+  height: 1px;
+  background: #b3b3b3;
+}
+
+.add-photo {
+  margin-top: 2em;
+  padding: 0.5em 1em;
+  color: white;
+  border: none;
+  border-radius: 60px;
+  background: #1d6154;
+  cursor: pointer;
+  width: 237px;
+  height: 36px;
+
+  font-family: Syne;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 #portfolio h2 {
   text-align: center;
-  margin-bottom: 1em;
+}
+
+#portfolio .portfolio-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mode-edition-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Retirer le soulignement par défaut des liens */
+  color: inherit; /* Prendre la couleur du texte parent ou une couleur spécifique */
+  gap: 7px;
 }
 
 .filtres-wrapper {
@@ -276,6 +359,7 @@ html {
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
+  margin-top: 45px;
 }
 
 .gallery img {

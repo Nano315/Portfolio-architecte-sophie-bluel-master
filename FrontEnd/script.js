@@ -1,87 +1,122 @@
-// URL de l'API
+// Constantes et références globales
 const API_URL = "http://localhost:5678/api/works";
-
-let travaux = [];  // Déclaration globale
-
-const filtres = document.querySelectorAll('.filtres-card');
-
 const body = document.getElementsByTagName('body')[0];
 const modeEditionBar = document.querySelector('.mode-edition-bar');
-const token = localStorage.getItem('token');
+const galerie = document.querySelector(".gallery");
+const filtres = document.querySelectorAll('.filtres-card');
+const loginLogoutLink = document.querySelector('#login-logout');
 
+// Stockage des travaux récupérés du backend
+let travaux = [];
 
-// Afficher la barre noire si l'utilisateur est connecté
-if (token) {
-    modeEditionBar.style.display = 'flex';
-    body.style.marginTop = '43px';
-} else {
-    modeEditionBar.style.display = 'none';
-    body.style.marginTop = '0px';
-}
+// Récupération des travaux depuis le backend
+fetchTravaux();
 
-// Récupération des travaux depuis le back-end
-fetch(API_URL)
-    .then(response => response.json())
-    .then(data => {
-        travaux = data;  // Mise à jour de la valeur
-        afficherTravaux(data);
-    })
-    .catch(error => {
-        console.error("Erreur lors de la récupération des travaux:", error);
-    });
+// Gestionnaire d'événements pour les filtres
+filtres.forEach(filtre => {
+    filtre.addEventListener('click', gestionnaireFiltre);
+});
 
+function initialiserUI() {
+    const token = localStorage.getItem('token');
+    const filtresWrapper = document.querySelector('.filtres-wrapper');
+    const modalEditLink = document.getElementById('modalEditLink');
+    if (token) {
+        modeEditionBar.style.display = 'flex';
+        body.style.marginTop = '43px';
+        
+        // Changer le texte en "logout"
+        if (loginLogoutLink) {
+            loginLogoutLink.textContent = 'logout';
+            // Ajouter un écouteur d'événement pour la déconnexion
+            loginLogoutLink.addEventListener('click', deconnecterUtilisateur);
+        }
 
-// Fonction pour afficher les travaux dans la galerie
-function afficherTravaux(travaux) {
-    const galerie = document.querySelector(".gallery"); // Remplacez "galerie" par l'ID de votre élément de galerie
-    travaux.forEach(travail => {
-        // Créez un nouvel élément pour chaque travail
-        const elementTravail = document.createElement("figure");
-        elementTravail.innerHTML = `
-            <img src="${travail.imageUrl}" alt="${travail.title}">
-            <figcaption>${travail.title}</figcaption>
-        `;
-        galerie.appendChild(elementTravail);
-    });
-}
+        // Afficher le lien d'édition modal si l'utilisateur est connecté
+        if (modalEditLink) {
+            modalEditLink.style.display = 'flex';
+        }
 
-
-// Fonction pour filtrer les travaux selon la catégorie
-function filtrerTravaux(categoryId) {
-    // Si la catégorie est 0 ("Tous"), on affiche tous les travaux
-    if (categoryId === 0) {
-        afficherTravaux(travaux);
+        // Cacher les filtres si l'utilisateur est connecté
+        if (filtresWrapper) {
+            filtresWrapper.style.display = 'none';
+        }
     } else {
-        // Sinon, on filtre les travaux selon la catégorie choisie
-        const travauxFiltres = travaux.filter(travail => travail.categoryId === categoryId);
-        afficherTravaux(travauxFiltres);
+        modeEditionBar.style.display = 'none';
+        body.style.marginTop = '0px';
+        
+        // Changer le texte en "login"
+        if (loginLogoutLink) {
+            loginLogoutLink.textContent = 'login';
+            loginLogoutLink.removeEventListener('click', deconnecterUtilisateur);
+        }
+
+        // Masquer le lien d'édition modal si l'utilisateur n'est pas connecté
+        if (modalEditLink) {
+            modalEditLink.style.display = 'none';
+        }
+
+        // Afficher les filtres si l'utilisateur n'est pas connecté
+        if (filtresWrapper) {
+            filtresWrapper.style.display = 'flex';
+        }
     }
 }
 
+function deconnecterUtilisateur() {
+    // Suppression du token du localStorage
+    localStorage.removeItem('token');
+}
 
-filtres.forEach(filtre => {
-    filtre.addEventListener('click', () => {
-        // Enlever la classe 'selected' de tous les filtres
-        filtres.forEach(innerFiltre => {
-            innerFiltre.classList.remove('selected');
+function fetchTravaux() {
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(data => {
+            travaux = data; // Mise à jour de la liste des travaux
+            afficherTravaux(travaux);
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des travaux:", error);
         });
+}
 
-        // Ajouter la classe 'selected' au filtre cliqué
-        filtre.classList.add('selected');
-
-
-        // Récupération de l'ID de la catégorie du filtre
-        const categoryId = parseInt(filtre.getAttribute('data-category-id'));
-
-        // Suppression de tous les éléments précédents de la galerie
-        document.querySelector('.gallery').innerHTML = "";
-
-        // Filtrage des travaux selon l'ID de la catégorie
-        filtrerTravaux(categoryId);
-
-        // À la déconnexion de l'utilisateur
-localStorage.removeItem('token');
+function afficherTravaux(travaux) {
+    // Vider la galerie avant d'afficher de nouveaux éléments
+    galerie.innerHTML = "";
+    travaux.forEach(travail => {
+        galerie.appendChild(creerElementTravail(travail));
     });
-});
+}
 
+function creerElementTravail(travail) {
+    const elementTravail = document.createElement("figure");
+    elementTravail.innerHTML = `
+        <img src="${travail.imageUrl}" alt="${travail.title}">
+        <figcaption>${travail.title}</figcaption>
+    `;
+    return elementTravail;
+}
 
+function filtrerTravaux(categoryId) {
+    return categoryId === 0 ? travaux : travaux.filter(travail => travail.categoryId === categoryId);
+}
+
+function gestionnaireFiltre(event) {
+    // Récupération de l'ID de la catégorie du filtre et mise à jour de l'UI
+    const filtre = event.currentTarget;
+    const categoryId = parseInt(filtre.getAttribute('data-category-id'));
+    majFiltresUI(filtre);
+
+    // Affichage des travaux filtrés
+    afficherTravaux(filtrerTravaux(categoryId));
+}
+
+function majFiltresUI(filtreSelectionne) {
+    filtres.forEach(filtre => {
+        filtre.classList.remove('selected');
+    });
+    filtreSelectionne.classList.add('selected');
+}
+
+// Initialisation de l'interface utilisateur
+initialiserUI();

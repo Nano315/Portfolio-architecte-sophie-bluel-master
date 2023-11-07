@@ -27,7 +27,7 @@
         <ul>
           <li><a href="#portfolio">projets</a></li>
           <li><a href="#contact">contact</a></li>
-          <li><a href="login.html">login</a></li>
+          <li><a href="login.html" id="login-logout">login</a></li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
@@ -56,8 +56,36 @@
           </p>
         </article>
       </section>
+
+      <aside
+        id="modal1"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-labelledby="titlemodal"
+      >
+        <div class="modal-wrapper">
+          <button class="close-modal" aria-label="Fermer la modal">x</button>
+        <br>
+        <br>
+          <div class="main-modal">
+            <h2 id="titlemodal">Galerie photo</h2>
+
+            <div class="gallery-grid"></div>
+            <div id="barre-separatrice"></div>
+            <button class="add-photo">Ajouter une photo</button>
+          </div>
+        </div>
+      </aside>
+
       <section id="portfolio">
-        <h2>Mes Projets</h2>
+        <div class="portfolio-header">
+          <h2>Mes Projets</h2>
+          <a href="#modal1" class="mode-edition-link" id="modalEditLink">
+            <img src="./assets/icons/Vector_black.png" alt="Icon edition" />
+            <p>Mode édition</p>
+          </a>
+        </div>
         <div class="filtres-wrapper">
           <div
             class="filtres-card selected"
@@ -101,6 +129,7 @@
         </div>
         <div class="gallery"></div>
       </section>
+
       <section id="contact">
         <h2>Contact</h2>
         <p>Vous avez un projet ? Discutons-en !</p>
