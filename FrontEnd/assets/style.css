@@ -253,7 +253,7 @@ html {
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
 
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 }
@@ -292,6 +292,18 @@ html {
   font-weight: 400;
 }
 
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  grid-column-gap: 10px; 
+  grid-row-gap: 30px;
+  margin: 46px 0px;
+}
+
+.gallery-grid img {
+  max-width: 90px;
+}
+
 #barre-separatrice {
   width: 420px;
   height: 1px;
@@ -325,7 +337,7 @@ html {
   gap: 20px;
 }
 
-.mode-edition-link {
+.js-mode-edition-link {
   display: flex;
   align-items: center;
   text-decoration: none; /* Retirer le soulignement par défaut des liens */

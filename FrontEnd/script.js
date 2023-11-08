@@ -1,10 +1,38 @@
 // Constantes et références globales
 const API_URL = "http://localhost:5678/api/works";
+
 const body = document.getElementsByTagName('body')[0];
-const modeEditionBar = document.querySelector('.mode-edition-bar');
-const galerie = document.querySelector(".gallery");
-const filtres = document.querySelectorAll('.filtres-card');
 const loginLogoutLink = document.querySelector('#login-logout');
+const modeEditionBar = document.querySelector('.mode-edition-bar');
+
+const filtres = document.querySelectorAll('.filtres-card');
+const galerie = document.querySelector(".gallery");
+
+const openModalButton = document.querySelector('.js-mode-edition-link');
+const closeModalButton = document.querySelector('.close-modal');
+const modal = document.querySelector('.modal');
+const galleryGrid = document.querySelector('.gallery-grid');
+
+
+// Attacher l'événement click au bouton d'ouverture de la modale
+openModalButton.addEventListener('click', openModal);
+
+// Attacher l'événement click au bouton de fermeture de la modale
+closeModalButton.addEventListener('click', closeModal);
+
+// Fermer la modale si on clique à l'extérieur de .modal-wrapper
+modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+// Empêcher la propagation de l'événement click dans .modal-wrapper
+document.querySelector('.modal-wrapper').addEventListener('click', function (event) {
+    event.stopPropagation();
+});
+
+
 
 // Stockage des travaux récupérés du backend
 let travaux = [];
@@ -17,6 +45,18 @@ filtres.forEach(filtre => {
     filtre.addEventListener('click', gestionnaireFiltre);
 });
 
+// Fonction pour ouvrir la modale
+function openModal(event) {
+    event.preventDefault(); // Empêche le navigateur de suivre le lien
+    modal.style.display = 'flex'; // Affiche la modale
+    afficherTravauxDansModale(travaux);
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+    modal.style.display = 'none'; // Cache la modale
+}
+
 function initialiserUI() {
     const token = localStorage.getItem('token');
     const filtresWrapper = document.querySelector('.filtres-wrapper');
@@ -24,7 +64,7 @@ function initialiserUI() {
     if (token) {
         modeEditionBar.style.display = 'flex';
         body.style.marginTop = '43px';
-        
+
         // Changer le texte en "logout"
         if (loginLogoutLink) {
             loginLogoutLink.textContent = 'logout';
@@ -44,7 +84,7 @@ function initialiserUI() {
     } else {
         modeEditionBar.style.display = 'none';
         body.style.marginTop = '0px';
-        
+
         // Changer le texte en "login"
         if (loginLogoutLink) {
             loginLogoutLink.textContent = 'login';
@@ -85,6 +125,20 @@ function afficherTravaux(travaux) {
     galerie.innerHTML = "";
     travaux.forEach(travail => {
         galerie.appendChild(creerElementTravail(travail));
+    });
+}
+
+// Fonction pour afficher les travaux dans la modale
+function afficherTravauxDansModale(travaux) {
+    // Vider la grille de la galerie avant d'ajouter de nouveaux éléments
+    galleryGrid.innerHTML = '';
+
+    // Créer un élément pour chaque travail et l'ajouter à la galerie
+    travaux.forEach(travail => {
+        const imgElement = document.createElement('img');
+        imgElement.src = travail.imageUrl;
+        imgElement.alt = travail.title; // alt vide si le titre n'est pas nécessaire
+        galleryGrid.appendChild(imgElement);
     });
 }
 
