@@ -57,6 +57,42 @@ function closeModal() {
     modal.style.display = 'none'; // Cache la modale
 }
 
+// Fonction pour créer un bouton de suppression
+function creerBoutonSuppression(travail) {
+    const btn = document.createElement('button');
+    btn.className = 'delete-btn';
+    btn.innerHTML = `<img src="./assets/icons/trash.png" alt="Supprimer"/>`; // Remplacez avec le chemin de votre icône corbeille
+    btn.onclick = function () {
+        supprimerTravail(travail.id);
+    };
+    return btn;
+}
+
+// Fonction pour supprimer un travail
+function supprimerTravail(id) {
+    const token = localStorage.getItem('token'); // Récupérez le token stocké dans localStorage
+    fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                const elementASupprimer = document.querySelector(`[data-travail-id="${id}"]`);
+                if (elementASupprimer) {
+                    galleryGrid.removeChild(elementASupprimer);
+                }
+            } else {
+                throw new Error('Authorization required');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la suppression du travail:', error);
+        });
+}
+
+
 function initialiserUI() {
     const token = localStorage.getItem('token');
     const filtresWrapper = document.querySelector('.filtres-wrapper');
@@ -130,15 +166,28 @@ function afficherTravaux(travaux) {
 
 // Fonction pour afficher les travaux dans la modale
 function afficherTravauxDansModale(travaux) {
-    // Vider la grille de la galerie avant d'ajouter de nouveaux éléments
-    galleryGrid.innerHTML = '';
+    galleryGrid.innerHTML = ''; // Vider la galerie
 
-    // Créer un élément pour chaque travail et l'ajouter à la galerie
     travaux.forEach(travail => {
+        // Conteneur pour chaque travail
+        const divTravail = document.createElement('div');
+        divTravail.className = 'travail-item';
+        divTravail.setAttribute('data-travail-id', travail.id); // Attribut pour identifier l'élément lors de la suppression
+
+        // Image du travail
         const imgElement = document.createElement('img');
         imgElement.src = travail.imageUrl;
-        imgElement.alt = travail.title; // alt vide si le titre n'est pas nécessaire
-        galleryGrid.appendChild(imgElement);
+        imgElement.alt = 'Image du travail'; // Modifier si nécessaire
+
+        // Ajout de l'image au conteneur
+        divTravail.appendChild(imgElement);
+
+        // Créer et ajouter le bouton de suppression
+        const deleteBtn = creerBoutonSuppression(travail);
+        divTravail.appendChild(deleteBtn);
+
+        // Ajouter le conteneur à la galerie
+        galleryGrid.appendChild(divTravail);
     });
 }
 
