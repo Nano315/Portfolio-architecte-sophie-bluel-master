@@ -245,6 +245,10 @@ html {
   margin-bottom: 0.5em;
 }
 
+.hidden {
+  display: none;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -294,8 +298,8 @@ html {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); 
-  grid-column-gap: 10px; 
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 10px;
   grid-row-gap: 30px;
   margin: 46px 0px;
 }
@@ -310,13 +314,13 @@ html {
   background: #b3b3b3;
 }
 
-.add-photo {
+.add-photo,
+.validate-add-photo {
   margin-top: 2em;
   padding: 0.5em 1em;
   color: white;
   border: none;
   border-radius: 60px;
-  background: #1d6154;
   cursor: pointer;
   width: 237px;
   height: 36px;
@@ -324,6 +328,91 @@ html {
   font-family: Syne;
   font-size: 14px;
   font-weight: 700;
+}
+
+.retour-modal {
+  padding: 0;
+  border: none;
+  background: inherit;
+}
+
+.valid {
+  background: #1d6154;
+}
+
+.invalid {
+  background: #a7a7a7;
+}
+
+.container-input-img {
+  margin: 33px 0px;
+  padding: 19px;
+  min-width: 420px;
+  background: #e8f1f6;
+  border-radius: 3px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.input-add-photo {
+  border-radius: 50px;
+  border: none;
+  background: #cbd6dc;
+  min-width: 173px;
+  min-height: 36px;
+
+  color: #306685;
+
+  text-align: center;
+  font-family: Work Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.input-group {
+  margin-bottom: 28px;
+}
+
+.input-group h3 {
+  color: #3d3d3d;
+
+  font-family: Work Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.input-group input,
+.input-group select {
+  background: #fff;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+  padding: 0px 18px;
+
+  color: #444;
+
+  font-family: Work Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.input-group input {
+  width: 420px;
+  height: 51px;
+}
+
+.input-group select {
+  width: 420px;
+  height: 51px;
+  border: none;
+  margin: 10px 0px;
 }
 
 #portfolio h2 {

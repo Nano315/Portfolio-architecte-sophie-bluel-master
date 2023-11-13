@@ -9,16 +9,17 @@ const filtres = document.querySelectorAll('.filtres-card');
 const galerie = document.querySelector(".gallery");
 
 const openModalButton = document.querySelector('.js-mode-edition-link');
-const closeModalButton = document.querySelector('.close-modal');
 const modal = document.querySelector('.modal');
 const galleryGrid = document.querySelector('.gallery-grid');
 
 
+// Attacher l'événement click au bouton de fermeture de la modale pour chaque section
+document.querySelectorAll('.close-modal').forEach(button => {
+    button.addEventListener('click', closeModal);
+});
+
 // Attacher l'événement click au bouton d'ouverture de la modale
 openModalButton.addEventListener('click', openModal);
-
-// Attacher l'événement click au bouton de fermeture de la modale
-closeModalButton.addEventListener('click', closeModal);
 
 // Fermer la modale si on clique à l'extérieur de .modal-wrapper
 modal.addEventListener('click', function (event) {
@@ -26,12 +27,6 @@ modal.addEventListener('click', function (event) {
         closeModal();
     }
 });
-
-// Empêcher la propagation de l'événement click dans .modal-wrapper
-document.querySelector('.modal-wrapper').addEventListener('click', function (event) {
-    event.stopPropagation();
-});
-
 
 
 // Stockage des travaux récupérés du backend
@@ -55,13 +50,15 @@ function openModal(event) {
 // Fonction pour fermer la modale
 function closeModal() {
     modal.style.display = 'none'; // Cache la modale
+    resetModalToInitialState(); // Réinitialise l'affichage de la modale
+    resetAddPhotoModal(); // Réinitialise les champs de la modale d'ajout de photo
 }
 
 // Fonction pour créer un bouton de suppression
 function creerBoutonSuppression(travail) {
     const btn = document.createElement('button');
     btn.className = 'delete-btn';
-    btn.innerHTML = `<img src="./assets/icons/trash.png" alt="Supprimer"/>`; // Remplacez avec le chemin de votre icône corbeille
+    btn.innerHTML = `<img src="./assets/icons/trash.png" alt="Supprimer"/>`;
     btn.onclick = function () {
         supprimerTravail(travail.id);
     };
@@ -220,6 +217,107 @@ function majFiltresUI(filtreSelectionne) {
     });
     filtreSelectionne.classList.add('selected');
 }
+
+// Fonction pour changer l'affichage de la modale
+function toggleModalContent() {
+    const gallerySection = document.getElementById('gallery-section');
+    const addPhotoSection = document.getElementById('add-photo-section');
+
+    gallerySection.classList.toggle('hidden');
+    addPhotoSection.classList.toggle('hidden');
+
+    resetAddPhotoModal(); // Réinitialise les champs de la modale d'ajout de photo
+}
+
+// Ajoutez un écouteur d'événements pour le bouton "Ajouter une photo"
+document.querySelector('.add-photo').addEventListener('click', function () {
+    toggleModalContent();
+});
+
+// Ajoutez un écouteur d'événements pour le bouton de retour
+document.querySelector('.retour-modal').addEventListener('click', function () {
+    toggleModalContent();
+});
+
+// Fonction pour charger et afficher l'image sélectionnée
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const container = document.querySelector('.container-input-img');
+            container.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" style="width: 129px; height: 193px;" />`;
+            checkFormCompletion(); // Vérifiez si tous les champs sont remplis après le chargement de l'image
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Modifier l'écouteur d'événements pour le bouton d'upload d'image pour qu'il s'applique à l'input et non au bouton
+document.querySelector('.container-input-img').addEventListener('click', function () {
+    document.getElementById('image-upload').click();
+});
+
+// Créez un input de type file qui sera cliqué lors du clic sur le bouton "+ Ajouter photo"
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.id = 'image-upload';
+fileInput.style.display = 'none';
+fileInput.accept = 'image/png, image/jpeg';
+document.body.appendChild(fileInput);
+
+// Attachez l'écouteur d'événements à cet input de type file
+fileInput.addEventListener('change', handleImageUpload);
+
+
+// Fonction pour vérifier si tous les champs sont remplis
+function checkFormCompletion() {
+    const title = document.getElementById('titre-projet').value;
+    const category = document.getElementById('categorie-projet').value;
+    const imageContainer = document.querySelector('.container-input-img img');
+
+    const isValid = title && category && imageContainer;
+    const validateButton = document.querySelector('.validate-add-photo');
+
+    if (isValid) {
+        validateButton.classList.remove('invalid');
+        validateButton.classList.add('valid');
+    } else {
+        validateButton.classList.remove('valid');
+        validateButton.classList.add('invalid');
+    }
+}
+
+// Fonction pour réinitialiser l'affichage de la modale à l'état initial
+function resetModalToInitialState() {
+    document.getElementById('gallery-section').classList.remove('hidden');
+    document.getElementById('add-photo-section').classList.add('hidden');
+}
+
+// Fonction pour réinitialiser les champs de la modale d'ajout de photo
+function resetAddPhotoModal() {
+    // Remettre l'aperçu de l'image à son état initial
+    const container = document.querySelector('.container-input-img');
+    container.innerHTML = `
+      <img src="./assets/icons/picture-svgrepo-com.svg" alt="icon image" />
+      <button class="input-add-photo">+ Ajouter photo</button>
+      <p>jpg, png : 4mo max</p>
+    `;
+
+    // Réinitialiser les valeurs des champs de formulaire
+    document.getElementById('titre-projet').value = '';
+    document.getElementById('categorie-projet').value = '';
+
+    // Réinitialiser le bouton de validation
+    const validateButton = document.querySelector('.validate-add-photo');
+    validateButton.classList.add('invalid');
+    validateButton.classList.remove('valid');
+}
+
+// Ajoutez des écouteurs d'événements pour les changements de champ
+document.getElementById('titre-projet').addEventListener('input', checkFormCompletion);
+document.getElementById('categorie-projet').addEventListener('change', checkFormCompletion);
+
 
 // Initialisation de l'interface utilisateur
 initialiserUI();
