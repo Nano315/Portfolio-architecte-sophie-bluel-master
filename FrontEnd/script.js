@@ -58,7 +58,7 @@ function closeModal() {
 function creerBoutonSuppression(travail) {
     const btn = document.createElement('button');
     btn.className = 'delete-btn';
-    btn.innerHTML = `<img src="./assets/icons/trash.png" alt="Supprimer"/>`;
+    btn.innerHTML = `<img src="./assets/icons/trash-can-solid.svg" alt="Supprimer"/>`;
     btn.onclick = function () {
         supprimerTravail(travail.id);
     };
@@ -174,7 +174,7 @@ function afficherTravauxDansModale(travaux) {
         // Image du travail
         const imgElement = document.createElement('img');
         imgElement.src = travail.imageUrl;
-        imgElement.alt = 'Image du travail'; // Modifier si nécessaire
+        imgElement.alt = 'Image du travail';
 
         // Ajout de l'image au conteneur
         divTravail.appendChild(imgElement);
@@ -282,9 +282,13 @@ function checkFormCompletion() {
     if (isValid) {
         validateButton.classList.remove('invalid');
         validateButton.classList.add('valid');
+        document.querySelector('.validate-add-photo').addEventListener('click', handleAddPhotoFormSubmission);
+        return true;
     } else {
         validateButton.classList.remove('valid');
         validateButton.classList.add('invalid');
+        document.querySelector('.validate-add-photo').removeEventListener('click', handleAddPhotoFormSubmission);
+        return false;
     }
 }
 
@@ -318,6 +322,55 @@ function resetAddPhotoModal() {
 document.getElementById('titre-projet').addEventListener('input', checkFormCompletion);
 document.getElementById('categorie-projet').addEventListener('change', checkFormCompletion);
 
+// Fonction pour gérer la soumission du formulaire d'ajout de photo
+function handleAddPhotoFormSubmission(event) {
+    event.preventDefault(); // Empêcher le comportement de soumission par défaut
+
+    // Vérifier si le formulaire est correctement rempli
+    if (!checkFormCompletion()) {
+        alert("Veuillez remplir tous les champs avant de soumettre.");
+        return;
+    }
+
+    // Créer un objet FormData et ajouter les données du formulaire
+    const formData = new FormData();
+    formData.append('image', document.getElementById('image-upload').files[0]);
+    formData.append('title', document.getElementById('titre-projet').value);
+    formData.append('category', document.getElementById('categorie-projet').value);
+    
+
+    const token = localStorage.getItem('token');
+    // Envoyer les données au serveur via fetch
+    fetch(API_URL, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Une erreur est survenue lors de l'envoi du formulaire.");
+            } else {
+                closeModal();
+                afficherNouveauProjet(data); // Fonction pour afficher le nouveau projet ajouté
+            }
+        })
+        .catch(error => {
+            console.error("Erreur lors de l'envoi du formulaire: ", error);
+        });
+}
+
+// Fonction pour afficher le nouveau projet ajouté dans la galerie et la modale
+function afficherNouveauProjet(projet) {
+    // Ajouter le nouveau projet à l'array travaux
+    travaux.push(projet);
+
+    // Créer le nouvel élément de la galerie
+    const nouvelElement = creerElementTravail(projet);
+    galerie.appendChild(nouvelElement);
+}
 
 // Initialisation de l'interface utilisateur
 initialiserUI();

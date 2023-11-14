@@ -308,6 +308,23 @@ html {
   max-width: 90px;
 }
 
+.delete-btn {
+  position: absolute;
+  background-color: black;
+  border: none;
+  width: 21px;
+  height: 21px;
+  border-radius: 3px;
+}
+
+.delete-btn img {
+  width: 9px;
+  height: 11px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
 #barre-separatrice {
   width: 420px;
   height: 1px;
