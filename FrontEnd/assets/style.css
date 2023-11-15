@@ -315,6 +315,8 @@ html {
   width: 21px;
   height: 21px;
   border-radius: 3px;
+  margin-left: -26px;
+  margin-top: 5px;
 }
 
 .delete-btn img {
