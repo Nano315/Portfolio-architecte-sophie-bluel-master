@@ -275,8 +275,13 @@ function checkFormCompletion() {
     const title = document.getElementById('titre-projet').value;
     const category = document.getElementById('categorie-projet').value;
     const imageContainer = document.querySelector('.container-input-img img');
-
-    const isValid = title && category && imageContainer;
+    
+    // Vérifiez que l'imageContainer existe et que son src n'est pas l'image par défaut
+    const defaultImageSrc = 'assets/icons/picture-svgrepo-com.svg'; 
+    const isImageUploaded = imageContainer && (!imageContainer.src.includes(defaultImageSrc));
+    
+    const isValid = title && category && isImageUploaded;
+    
     const validateButton = document.querySelector('.validate-add-photo');
 
     if (isValid) {
