@@ -143,7 +143,7 @@ body {
   margin-top: 43px;
 }
 
-.mode-edition-bar {
+.edit-mode-bar {
   background-color: black;
   color: #fffef8;
   width: 100%;
@@ -327,7 +327,7 @@ html {
   align-items: center;
 }
 
-#barre-separatrice {
+#separator-bar {
   width: 420px;
   height: 1px;
   background: #b3b3b3;
@@ -349,7 +349,7 @@ html {
   font-weight: 700;
 }
 
-.retour-modal {
+.modal-back-button {
   padding: 0;
   border: none;
   background: inherit;
@@ -363,7 +363,7 @@ html {
   background: #a7a7a7;
 }
 
-.container-input-img {
+.image-input-container {
   margin: 33px 0px;
   padding: 19px;
   min-width: 420px;
@@ -376,7 +376,7 @@ html {
   gap: 7px;
 }
 
-.input-add-photo {
+.add-photo-button {
   border-radius: 50px;
   border: none;
   background: #cbd6dc;
@@ -445,7 +445,7 @@ html {
   gap: 20px;
 }
 
-.js-mode-edition-link {
+.js-edit-mode-link {
   display: flex;
   align-items: center;
   text-decoration: none; /* Retirer le soulignement par défaut des liens */
@@ -453,14 +453,14 @@ html {
   gap: 7px;
 }
 
-.filtres-wrapper {
+.filters-wrapper {
   display: flex;
   gap: 10px;
   margin: 45px;
   justify-content: center;
 }
 
-.filtres-card {
+.filter-card {
   border-radius: 60px;
   border: 1px solid #1d6154;
   padding: 7px;
@@ -468,7 +468,7 @@ html {
   text-align: center;
 }
 
-.filtres-card.selected {
+.filter-card.selected {
   background-color: #1d6154;
   color: white;
 }
@@ -544,13 +544,13 @@ nav .selected {
   font-weight: bold;
 }
 
-.container-login {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.container-login form {
+.login-container form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -570,7 +570,7 @@ nav .selected {
   margin: 10px 0px;
 }
 
-.container-login form button {
+.login-container form button {
   font-family: "Syne";
   font-weight: 700;
   color: white;
@@ -580,7 +580,7 @@ nav .selected {
   border: none;
 }
 
-.container-login form a {
+.login-container form a {
   color: inherit;
   text-underline-offset: 3px;
 }

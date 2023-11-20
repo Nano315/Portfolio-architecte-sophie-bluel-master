@@ -1,7 +1,10 @@
 // URL de l'API de connexion
 const LOGIN_API_URL = "http://localhost:5678/api/users/login";
 
-document.querySelector(".container-login form").addEventListener("submit", function (event) {
+const body = document.getElementsByTagName('body')[0];
+body.style.marginTop = '0px';
+
+document.querySelector(".login-container form").addEventListener("submit", function (event) {
     event.preventDefault();  // Prévenir la soumission standard du formulaire
 
 
