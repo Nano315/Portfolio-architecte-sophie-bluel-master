@@ -13,81 +13,11 @@ const modal = document.querySelector('.modal');
 const galleryGrid = document.querySelector('.gallery-grid');
 
 
-// Attacher l'événement click au bouton de fermeture de la modale pour chaque section
-document.querySelectorAll('.close-modal').forEach(button => {
-    button.addEventListener('click', closeModal);
-});
-
-// Attacher l'événement click au bouton d'ouverture de la modale
-openModalButton.addEventListener('click', openModal);
-
-// Fermer la modale si on clique à l'extérieur de .modal-wrapper
-modal.addEventListener('click', function (event) {
-    if (event.target === modal) {
-        closeModal();
-    }
-});
-
-
 // Stockage des travaux récupérés du backend
 let works = [];
 
 // Récupération des travaux depuis le backend
 fetchWorks();
-
-// Gestionnaire d'événements pour les filtres
-filters.forEach(filter => {
-    filter.addEventListener('click', filterHandler);
-});
-
-// Fonction pour ouvrir la modale
-function openModal(event) {
-    event.preventDefault(); // Empêche le navigateur de suivre le lien
-    modal.style.display = 'flex'; // Affiche la modale
-    displayWorksInModal(works);
-}
-
-// Fonction pour fermer la modale
-function closeModal() {
-    modal.style.display = 'none'; // Cache la modale
-    resetModalToInitialState(); // Réinitialise l'affichage de la modale
-    resetAddPhotoModal(); // Réinitialise les champs de la modale d'ajout de photo
-}
-
-// Fonction pour créer un bouton de suppression
-function createDeleteButton(work) {
-    const btn = document.createElement('button');
-    btn.className = 'delete-btn';
-    btn.innerHTML = `<img src="./assets/icons/trash-can-solid.svg" alt="Supprimer"/>`;
-    btn.onclick = function () {
-        deleteWork(work.id);
-    };
-    return btn;
-}
-
-// Fonction pour supprimer un travail
-function deleteWork(id) {
-    const token = localStorage.getItem('token'); // Récupérez le token stocké dans localStorage
-    fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                const elementToDelete = document.querySelector(`[data-work-id="${id}"]`);
-                if (elementToDelete) {
-                    galleryGrid.removeChild(elementToDelete);
-                }
-            } else {
-                throw new Error('Autorisation requise');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la suppression du travail:', error);
-        });
-}
 
 
 function initializeUI() {
@@ -141,6 +71,17 @@ function logoutUser() {
     localStorage.removeItem('token');
 }
 
+
+
+
+//:!:// FILTER et AFFICHER les projets dans la galerie //:!://
+
+// Gestionnaire d'événements pour les filtres
+filters.forEach(filter => {
+    filter.addEventListener('click', filterHandler);
+});
+
+// Récuperation des travaux
 function fetchWorks() {
     fetch(API_URL)
         .then(response => response.json())
@@ -159,6 +100,98 @@ function displayWorks(works) {
     works.forEach(work => {
         gallery.appendChild(createWorkElement(work));
     });
+}
+
+function filterWorks(categoryId) {
+    return categoryId === 0 ? works : works.filter(work => work.categoryId === categoryId);
+}
+
+function filterHandler(event) {
+    // Récupération de l'ID de la catégorie du filtre et mise à jour de l'UI
+    const filter = event.currentTarget;
+    const categoryId = parseInt(filter.getAttribute('data-category-id'));
+    updateFiltersUI(filter);
+
+    // Affichage des travaux filtrés
+    displayWorks(filterWorks(categoryId));
+}
+
+function updateFiltersUI(filterSelect) {
+    filters.forEach(filter => {
+        filter.classList.remove('selected');
+    });
+    filterSelect.classList.add('selected');
+}
+//:!://  //:!://
+
+
+
+//:!:// MODALE //:!://
+
+// Attacher l'événement click au bouton de fermeture de la modale pour chaque section
+document.querySelectorAll('.close-modal').forEach(button => {
+    button.addEventListener('click', closeModal);
+});
+
+// Attacher l'événement click au bouton d'ouverture de la modale
+openModalButton.addEventListener('click', openModal);
+
+// Fermer la modale si on clique à l'extérieur de .modal-wrapper
+modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+// Fonction pour ouvrir la modale
+function openModal(event) {
+    event.preventDefault(); // Empêche le navigateur de suivre le lien
+    modal.style.display = 'flex'; // Affiche la modale
+    displayWorksInModal(works);
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+    modal.style.display = 'none'; // Cache la modale
+    resetModalToInitialState(); // Réinitialise l'affichage de la modale
+    resetAddPhotoModal(); // Réinitialise les champs de la modale d'ajout de photo
+}
+
+// Fonction pour créer un bouton de suppression
+function createDeleteButton(work) {
+    const btn = document.createElement('button');
+    btn.className = 'delete-btn';
+    btn.innerHTML = `<img src="./assets/icons/trash-can-solid.svg" alt="Supprimer"/>`;
+    btn.onclick = function (event) {
+        event.stopPropagation();
+        deleteWork(work.id);
+        fetchWorks();
+    };
+    return btn;
+}
+
+// Fonction pour supprimer un travail
+function deleteWork(id) {
+    const token = localStorage.getItem('token'); // Récupérez le token stocké dans localStorage
+    fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                const elementToDelete = document.querySelector(`[data-work-id="${id}"]`);
+                if (elementToDelete) {
+                    galleryGrid.removeChild(elementToDelete);
+                }
+            } else {
+                throw new Error('Autorisation requise');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la suppression du travail:', error);
+        });
 }
 
 // Fonction pour afficher les travaux dans la modale
@@ -195,27 +228,6 @@ function createWorkElement(work) {
         <figcaption>${work.title}</figcaption>
     `;
     return elementTravail;
-}
-
-function filterWorks(categoryId) {
-    return categoryId === 0 ? works : works.filter(work => work.categoryId === categoryId);
-}
-
-function filterHandler(event) {
-    // Récupération de l'ID de la catégorie du filtre et mise à jour de l'UI
-    const filter = event.currentTarget;
-    const categoryId = parseInt(filter.getAttribute('data-category-id'));
-    updateFiltersUI(filter);
-
-    // Affichage des travaux filtrés
-    displayWorks(filterWorks(categoryId));
-}
-
-function updateFiltersUI(filterSelect) {
-    filters.forEach(filter => {
-        filter.classList.remove('selected');
-    });
-    filterSelect.classList.add('selected');
 }
 
 // Fonction pour changer l'affichage de la modale
@@ -330,6 +342,7 @@ document.getElementById('project-category').addEventListener('change', checkForm
 // Fonction pour gérer la soumission du formulaire d'ajout de photo
 function handleAddPhotoFormSubmission(event) {
     event.preventDefault(); // Empêcher le comportement de soumission par défaut
+    event.stopPropagation(); // Empêcher la propagation à la modale
 
     // Vérifier si le formulaire est correctement rempli
     if (!checkFormCompletion()) {
@@ -358,7 +371,7 @@ function handleAddPhotoFormSubmission(event) {
             if (data.error) {
                 alert("Une erreur est survenue lors de l'envoi du formulaire.");
             } else {
-                closeModal();
+                toggleModalContent();
                 displayNewProject(data); // Fonction pour afficher le nouveau projet ajouté
             }
         })
@@ -371,11 +384,15 @@ function handleAddPhotoFormSubmission(event) {
 function displayNewProject(projet) {
     // Ajouter le nouveau projet à l'array travaux
     works.push(projet);
+    displayWorksInModal(works);
 
     // Créer le nouvel élément de la galerie
     const nouvelElement = createWorkElement(projet);
     gallery.appendChild(nouvelElement);
 }
+//:!://  //:!://
+
+
 
 // Initialisation de l'interface utilisateur
 initializeUI();
